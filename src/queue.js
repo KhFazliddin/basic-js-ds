@@ -13,48 +13,51 @@ const { ListNode } = require("../extensions/list-node.js");
  * queue.getUnderlyingList() // returns { value: 3, next: null }
  */
 
-class Queue {
+ class Queue {
   constructor() {
-    this.queue = null;
+    this.cur = null;
+    this.head = this.cur;
   }
 
+
   getUnderlyingList() {
-    return this.queue;
+    this.cur = this.head;
+    return this.cur;
   }
 
   enqueue(value) {
-    let listNode = new ListNode(value);
-
-    if (this.queue === null) {
-      this.queue = {
-        value: listNode.value,
-        next: listNode.next,
-      };
-    } else {
-      this.addNode(this.queue, listNode);
+    let current = this.cur;
+    if (this.cur === null) {
+      this.cur = {
+        value: value,
+        next: null
+      }
+      this.head = this.cur;
+      return this.cur;
     }
-  }
-
-  addNode(node, listNode) {
-    if (node.next === null) {
-      node.next = {
-        value: listNode.value,
-        next: listNode.next,
-      };
-    } else {
-      this.addNode(node.next, listNode);
+    this.cur = this.head;
+    while (current.next) {
+      current = current.next;
     }
+    current.next = new ListNode(value);
+    return this.head;
   }
 
   dequeue() {
-    const topElement = this.queue.value;
-
-    this.queue.value = this.queue.next.value;
-    this.queue.next = this.queue.next.next;
-
-    return topElement;
+    this.cur = this.head;
+    this.head = this.head.next;
+    return this.cur.value;
   }
 }
+
+/* node ./src/queue.js */
+const q = new Queue();
+q.enqueue(1);
+q.enqueue(2);
+q.enqueue(3);
+console.log(q.dequeue());
+console.log(q.dequeue());
+
 
 module.exports = {
   Queue,

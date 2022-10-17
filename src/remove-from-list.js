@@ -21,46 +21,40 @@ const { ListNode } = require('../extensions/list-node.js');
  *   }
  * }
  */
- function addNode(node, listNode) {
-  if (node.next === null) {
-    node.next = {
-      value: listNode.value,
-      next: listNode.next
-    };
-  } else {
-    addNode(node.next, listNode);
+ class ListNode {
+  constructor(x) {
+    this.value = x;
+    this.next = null;
   }
+}
+const last = list => {
+  let node = list;
+  while (node.next) {
+      node = node.next;
+  }
+  return node;
 };
 
+
+
 function removeKFromList(l, k) {
-  let arr = [];
-  let list = l;
+  let head = l;
+  let newList = null;
 
-  while (list.next) {
-    arr.push(list.value);
-    list.value = list.next.value;
-    list.next = list.next.next;
+  while(head) {
+     if(head.value !== k) {
+      if(!newList) {
+          newList = new ListNode(head.value);
+      } else {
+          last(newList).next = new ListNode(head.value);
+      } 
+     }
+      head = head.next;
   }
-  if (!list.next) {
-    arr.push(list.value)
-  }
 
-  arr = arr.filter(el => el !== k);
-
-  let listNode = new ListNode(arr[0]);
-
-  list = {
-    value: listNode.value,
-    next: listNode.next
-  };
-
-  for (let i = 1; i < arr.length; i++) {
-    let listNode = new ListNode(arr[i]);
-    addNode(list, listNode);
-  }
-  return list;
+  return newList;
+ 
 }
-
 module.exports = {
   removeKFromList,
 };
